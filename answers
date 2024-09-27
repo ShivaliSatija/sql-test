@@ -1,0 +1,75 @@
+Question 1: SELECT AVG(grade) AS average_grade
+FROM grades;
+
+Question 2: SELECT students.student_name, courses.course_name
+FROM enrollments
+JOIN students ON enrollments.student_id = students.student_id
+JOIN courses ON enrollments.course_id = courses.course_id;
+
+Question 3: SELECT grade_level, COUNT(student_id) AS student_count
+FROM students
+GROUP BY grade_level;
+
+
+Question 4: SELECT courses.course_name, MAX(grades.grade) AS max_grade
+FROM grades
+JOIN courses ON grades.course_id = courses.course_id
+GROUP BY courses.course_name;
+
+
+Question 5: SELECT AVG(grades.grade) AS average_grade
+FROM grades
+JOIN students ON grades.student_id = students.student_id
+WHERE students.grade_level = 3;
+
+
+Question 6: SELECT students.student_name, courses.course_name, courses.credit_hours
+FROM enrollments
+JOIN students ON enrollments.student_id = students.student_id
+JOIN courses ON enrollments.course_id = courses.course_id;
+
+
+Question 7: SELECT courses.course_name, AVG(grades.grade) AS average_grade
+FROM grades
+JOIN courses ON grades.course_id = courses.course_id
+GROUP BY courses.course_name
+HAVING AVG(grades.grade) > 3.0;
+
+
+Question 8: SELECT students.student_name
+FROM students
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM grades
+    WHERE grades.student_id = students.student_id
+    AND grades.grade = 4.0
+);
+
+Question 9: WITH student_avg_grades AS (
+    SELECT student_id, AVG(grade) AS avg_grade
+    FROM grades
+    GROUP BY student_id
+),
+overall_avg_grade AS (
+    SELECT AVG(grade) AS overall_avg
+    FROM grades
+)
+SELECT students.student_name
+FROM student_avg_grades
+JOIN students ON students.student_id = student_avg_grades.student_id
+WHERE student_avg_grades.avg_grade > (SELECT overall_avg FROM overall_avg_grade);
+
+
+Question 10: SELECT 
+    students.student_name,
+    COUNT(DISTINCT enrollments.course_id) AS total_courses,
+    AVG(grades.grade) AS average_grade
+FROM students
+JOIN enrollments ON students.student_id = enrollments.student_id
+JOIN grades ON students.student_id = grades.student_id AND enrollments.course_id = grades.course_id
+GROUP BY students.student_name;
+
+
+
+
+
